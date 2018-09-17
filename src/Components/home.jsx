@@ -11,6 +11,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
+import DriverTable from './driverTable';
 
 
 const drawerWidth = 240;
@@ -89,33 +90,40 @@ const styles = theme => ({
   },
 });
 
-const DrawerItem = ({ onClick, icon, text }) => (
-  <ListItem button {...onClick}>
+const DrawerItem = ({ onClick, icon, text, selected }) => ( // eslint-disable-line
+  <ListItem button onClick={onClick} selected={selected}>
     <ListItemIcon>{icon}</ListItemIcon>
     <ListItemText primary={text} />
   </ListItem>
 );
 
+DrawerItem.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  icon: PropTypes.node.isRequired,
+  text: PropTypes.string.isRequired,
+  selected: PropTypes.bool.isRequired,
+};
+
 const navItems = [
   {
-    key: 0,
+    key: 'navItem-sendEmails',
     text: 'Send Emails',
     icon: <SwapHorizIcon />,
-    onClick: () => ({}),
+    component: <p>TODO: Implement send email page.</p>,
   },
   {
-    key: 1,
+    key: 'navItem-driverInfo',
     text: 'Driver Info',
     icon: <AccountBoxIcon />,
-    onClick: () => ({}),
+    component: <DriverTable />,
   },
   {
-    key: 2,
+    key: 'navItem-settings',
     text: 'Message Template',
     icon: <SettingsIcon />,
-    onClick: () => ({}),
+    component: <p>TODO: Implement message template page.</p>,
   },
-].map(props => <DrawerItem {...props} />);
+];
 
 class Home extends Component {
   constructor() {
@@ -123,6 +131,7 @@ class Home extends Component {
 
     this.state = {
       open: true,
+      selectedItem: 0,
     };
   }
 
@@ -135,8 +144,8 @@ class Home extends Component {
   }
 
   render() {
-    const { classes, children } = this.props;
-    const { open } = this.state;
+    const { classes } = this.props;
+    const { open, selectedItem } = this.state;
 
     return (
       <React.Fragment>
@@ -174,11 +183,19 @@ class Home extends Component {
               </IconButton>
             </div>
             <Divider />
-            {navItems}
+            {
+              navItems.map((item, i) => (
+                <DrawerItem
+                  {...item}
+                  onClick={() => this.setState({ selectedItem: i })}
+                  selected={selectedItem === i}
+                />
+              ))
+            }
           </Drawer>
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
-            {children}
+            {navItems[selectedItem].component}
           </main>
         </div>
       </React.Fragment>
@@ -188,14 +205,6 @@ class Home extends Component {
 
 Home.propTypes = {
   classes: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-  ]),
-};
-
-Home.defaultProps = {
-  children: null,
 };
 
 export default withStyles(styles)(Home);
