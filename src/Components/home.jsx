@@ -8,11 +8,11 @@ import {
 
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
-import DriverTable from './driverTable';
 
+import Settings from './settings';
+import DriverTable from './driverTable';
 
 const drawerWidth = 240;
 
@@ -104,28 +104,30 @@ DrawerItem.propTypes = {
   selected: PropTypes.bool.isRequired,
 };
 
-const navItems = [
-  {
-    key: 'navItem-sendEmails',
-    text: 'Send Emails',
-    icon: <SwapHorizIcon />,
-    component: <p>TODO: Implement send email page.</p>,
-  },
-  {
-    key: 'navItem-driverInfo',
-    text: 'Driver Info',
-    icon: <AccountBoxIcon />,
-    component: <DriverTable />,
-  },
-  {
-    key: 'navItem-settings',
-    text: 'Message Template',
-    icon: <SettingsIcon />,
-    component: <p>TODO: Implement message template page.</p>,
-  },
-];
-
 class Home extends Component {
+  navItems = [
+    {
+      key: 'navItem-sendEmails',
+      text: 'Send Emails',
+      icon: <SwapHorizIcon />,
+      component: DriverTable,
+    },
+    /*
+    {
+      key: 'navItem-driverInfo',
+      text: 'Driver Info',
+      icon: <AccountBoxIcon />,
+      component: <DriverTable />,
+    },
+    */
+    {
+      key: 'navItem-settings',
+      text: 'Settings',
+      icon: <SettingsIcon />,
+      component: Settings,
+    },
+  ];
+
   constructor() {
     super();
 
@@ -142,6 +144,8 @@ class Home extends Component {
   handleDrawerClose = () => {
     this.setState({ open: false });
   }
+
+  InjectStore = Comp => <Comp {...this.props} store={this.props.store} /> // eslint-disable-line
 
   render() {
     const { classes } = this.props;
@@ -184,7 +188,7 @@ class Home extends Component {
             </div>
             <Divider />
             {
-              navItems.map((item, i) => (
+              this.navItems.map((item, i) => (
                 <DrawerItem
                   {...item}
                   onClick={() => this.setState({ selectedItem: i })}
@@ -195,7 +199,7 @@ class Home extends Component {
           </Drawer>
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
-            {navItems[selectedItem].component}
+            {this.InjectStore(this.navItems[selectedItem].component)}
           </main>
         </div>
       </React.Fragment>
@@ -205,6 +209,7 @@ class Home extends Component {
 
 Home.propTypes = {
   classes: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+  store: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 export default withStyles(styles)(Home);
