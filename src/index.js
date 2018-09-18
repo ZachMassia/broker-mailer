@@ -1,10 +1,18 @@
-import { app, BrowserWindow } from 'electron';
+import {
+  app, BrowserWindow, ipcMain, dialog,
+} from 'electron';
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import { enableLiveReload } from 'electron-compile';
+import Store from 'electron-store';
+
+import CONSTANTS from './constants';
+
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+
+const store = new Store();
 
 const isDevMode = process.execPath.match(/[\\/]electron/);
 
@@ -57,5 +65,11 @@ app.on('activate', () => {
   }
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
+ipcMain.on(CONSTANTS.EV_OPEN_FILE_DIALOG, (event) => {
+  const path = dialog.showOpenDialog({ properties: ['openFile'] });
+
+  if (path) {
+    store.set(CONSTANTS.EXCEL_PATH, path);
+    event.sender.send(CONSTANTS.EV_PATH_UPDATED, path);
+  }
+});
