@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { Grid } from '@material-ui/core';
 
 import FileSelect from './fileSelect';
+import EmailAuth from './emailAuth';
+
 
 class Settings extends Component {
   render() {
@@ -12,6 +14,9 @@ class Settings extends Component {
       <Grid container spacing={24}>
         <Grid item xs={12}>
           <FileSelect store={store} />
+        </Grid>
+        <Grid item xs={12}>
+          <EmailAuth store={store} />
         </Grid>
       </Grid>
 

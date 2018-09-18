@@ -4,6 +4,7 @@ import {
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import { enableLiveReload } from 'electron-compile';
 import Store from 'electron-store';
+import NodeOutlook from 'nodejs-nodemailer-outlook';
 
 import CONSTANTS from './constants';
 
@@ -72,4 +73,15 @@ ipcMain.on(CONSTANTS.EV_OPEN_FILE_DIALOG, (event) => {
     store.set(CONSTANTS.EXCEL_PATH, path);
     event.sender.send(CONSTANTS.EV_PATH_UPDATED, path);
   }
+});
+
+ipcMain.on(CONSTANTS.EV_SEND_EMAIL, (_, arg) => {
+  const { recipient, body } = args;
+
+  NodeOutlook.sendEmail({
+    auth: store.get(CONSTANTS.EMAIL_AUTH),
+    from: store.get(CONSTANTS.EMAIL_FROM),
+    to: recipient,
+    text: body,
+  });
 });
