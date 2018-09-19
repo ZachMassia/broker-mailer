@@ -12,6 +12,9 @@
       }
     ],
     "linebreak-style": 0,
+    "react/jsx-one-expression-per-line": {
+      "allow": "literal"
+    },
     "react/prefer-stateless-function": 0
   },
   "parser": "babel-eslint"
