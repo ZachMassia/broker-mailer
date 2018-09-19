@@ -75,7 +75,7 @@ ipcMain.on(CONSTANTS.EV_OPEN_FILE_DIALOG, (event) => {
   }
 });
 
-ipcMain.on(CONSTANTS.EV_SEND_EMAIL, (_, arg) => {
+ipcMain.on(CONSTANTS.EV_SEND_EMAIL, (_, args) => {
   const { recipient, body } = args;
 
   NodeOutlook.sendEmail({

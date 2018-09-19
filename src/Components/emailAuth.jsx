@@ -1,8 +1,7 @@
-import { ipcRenderer } from 'electron';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Typography, Card, CardActions, CardContent, Button, TextField,
+  Card, CardActions, CardContent, Button, TextField,
 } from '@material-ui/core';
 
 import CONSTANTS from '../constants';
@@ -14,12 +13,6 @@ class EmailAuth extends Component {
       user: '',
       pass: '',
     };
-
-    // Register to the filePath updates inside the store.
-    // Any changes made to store from the renderer side will be caught by this.
-    ipcRenderer.on(CONSTANTS.EV_EMAIL_AUTH_UPDATED, (_, arg) => {
-      this.setState({ ...arg });
-    });
   }
 
   componentDidMount() {
@@ -32,7 +25,7 @@ class EmailAuth extends Component {
     }
 
     // Register to the filePath updates.
-    store.onDidChange(CONSTANTS.EMAIL_AUTH, auth => this.setState({ ...auth }));
+    store.onDidChange(CONSTANTS.EMAIL_AUTH, _auth => this.setState({ ..._auth }));
   }
 
   handleUserChange = (e) => {
@@ -50,26 +43,25 @@ class EmailAuth extends Component {
     return (
       <Card>
         <CardContent>
-        <TextField
-          id="email-username"
-          label="Username"
-          value={user}
-          onChange={this.handleUserChange}
-        />
-        <br />
-        <TextField
-         id="email-password"
-         type="password"
-         label="Password"
-         value={pass}
-         onChange={this.handlePassChange}
-        />
-          
+          <TextField
+            id="email-username"
+            label="Username"
+            value={user}
+            onChange={this.handleUserChange}
+          />
+          <br />
+          <TextField
+            id="email-password"
+            type="password"
+            label="Password"
+            value={pass}
+            onChange={this.handlePassChange}
+          />
         </CardContent>
         <CardActions>
           <Button
             size="small"
-            onClick={() => store.set(CONSTANTS.EMAIL_AUTH, { ...user, ...pass })}
+            onClick={() => store.set(CONSTANTS.EMAIL_AUTH, this.state)}
           >
             Update credentials
           </Button>
