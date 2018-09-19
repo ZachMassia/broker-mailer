@@ -54,7 +54,7 @@ class FileSelect extends Component {
             size="small"
             onClick={() => ipcRenderer.send(CONSTANTS.EV_OPEN_FILE_DIALOG, 'data_str')}
           >
-          Set file..            
+          Set file..
           </Button>
         </CardActions>
       </Card>
