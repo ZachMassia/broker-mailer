@@ -15,10 +15,8 @@ class FileSelect extends Component {
     };
 
     // Register to the filePath updates inside the store.
-    // Any changes made to store from the renderer side will be caught by this.
-    ipcRenderer.on(CONSTANTS.EV_PATH_UPDATED, (_, arg) => {
-      this.setState({ filePath: arg });
-    });
+    // Any changes made to store from the main side will be caught by this.
+    ipcRenderer.on(CONSTANTS.EV_PATH_UPDATED, this.onIpcEvent);
   }
 
   componentDidMount() {
@@ -30,8 +28,20 @@ class FileSelect extends Component {
       this.setState({ filePath: path });
     }
 
-    // Register to the filePath updates.
-    store.onDidChange(CONSTANTS.EXCEL_PATH, filePath => this.setState({ ...filePath }));
+    // Register to the filePath updates directly on the store.
+    // This will catch any potential updates made on the renderer process.
+    store.onDidChange(
+      CONSTANTS.EXCEL_PATH,
+      filePath => this.setState({ ...filePath }),
+    );
+  }
+
+  componentWillUnmount() {
+    ipcRenderer.removeListener(CONSTANTS.EV_PATH_UPDATED, this.onIpcEvent);
+  }
+
+  onIpcEvent = (_, arg) => {
+    this.setState({ filePath: arg });
   }
 
   render() {

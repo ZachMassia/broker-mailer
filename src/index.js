@@ -13,7 +13,7 @@ import CONSTANTS from './constants';
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 
-const store = new Store();
+const store = new Store({ name: CONSTANTS.STORE_FILENAME });
 
 const isDevMode = process.execPath.match(/[\\/]electron/);
 
@@ -67,12 +67,24 @@ app.on('activate', () => {
 });
 
 ipcMain.on(CONSTANTS.EV_OPEN_FILE_DIALOG, (event) => {
-  const path = dialog.showOpenDialog({ properties: ['openFile'] });
+  dialog.showOpenDialog(
+    { properties: ['openFile'] },
+    (filePaths) => {
+      if (filePaths) {
+        store.set(CONSTANTS.EXCEL_PATH, filePaths);
+        event.sender.send(CONSTANTS.EV_PATH_UPDATED, filePaths);
+      }
+    },
+  );
 
+  /*
+  console.log("ipcMain on EV_OPEN_FILE_DIALOG: " + path);
   if (path) {
+    console.log("Setting path to " + path);
     store.set(CONSTANTS.EXCEL_PATH, path);
     event.sender.send(CONSTANTS.EV_PATH_UPDATED, path);
   }
+  */
 });
 
 ipcMain.on(CONSTANTS.EV_SEND_EMAIL, (_, args) => {
