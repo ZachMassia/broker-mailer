@@ -57,7 +57,8 @@
     "react": "^16.3.0",
     "react-dom": "^16.3.0",
     "react-hot-loader": "^4.3.8",
-    "typeface-roboto": "0.0.54"
+    "typeface-roboto": "0.0.54",
+    "xlsx": "^0.14.0"
   },
   "devDependencies": {
     "babel-eslint": "^9.0.0",
