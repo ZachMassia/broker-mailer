@@ -76,15 +76,6 @@ ipcMain.on(CONSTANTS.EV_OPEN_FILE_DIALOG, (event) => {
       }
     },
   );
-
-  /*
-  console.log("ipcMain on EV_OPEN_FILE_DIALOG: " + path);
-  if (path) {
-    console.log("Setting path to " + path);
-    store.set(CONSTANTS.EXCEL_PATH, path);
-    event.sender.send(CONSTANTS.EV_PATH_UPDATED, path);
-  }
-  */
 });
 
 ipcMain.on(CONSTANTS.EV_SEND_EMAIL, (_, args) => {

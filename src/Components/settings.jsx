@@ -19,7 +19,6 @@ class Settings extends Component {
           <EmailAuth store={store} />
         </Grid>
       </Grid>
-
     );
   }
 }
