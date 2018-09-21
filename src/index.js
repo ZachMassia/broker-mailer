@@ -5,6 +5,7 @@ import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-insta
 import { enableLiveReload } from 'electron-compile';
 import Store from 'electron-store';
 import NodeOutlook from 'nodejs-nodemailer-outlook';
+import XLSX from 'xlsx';
 
 import CONSTANTS from './constants';
 
@@ -71,8 +72,8 @@ ipcMain.on(CONSTANTS.EV_OPEN_FILE_DIALOG, (event) => {
     { properties: ['openFile'] },
     (filePaths) => {
       if (filePaths) {
-        store.set(CONSTANTS.EXCEL_PATH, filePaths);
-        event.sender.send(CONSTANTS.EV_PATH_UPDATED, filePaths);
+        store.set(CONSTANTS.EXCEL_PATH, filePaths[0]);
+        event.sender.send(CONSTANTS.EV_PATH_UPDATED, filePaths[0]);
       }
     },
   );
@@ -87,4 +88,14 @@ ipcMain.on(CONSTANTS.EV_SEND_EMAIL, (_, args) => {
     to: recipient,
     text: body,
   });
+});
+
+ipcMain.on(CONSTANTS.EV_LOAD_FILE, (event) => {
+  const workbook = XLSX.readFile(store.get(CONSTANTS.EXCEL_PATH));
+  const trailerSheetName = workbook.SheetNames[3];
+  const trailerSheet = workbook.Sheets[trailerSheetName];
+
+  const json = XLSX.utils.sheet_to_json(trailerSheet);
+
+  event.sender.send(CONSTANTS.EV_RECEIVE_JSON, json);
 });
