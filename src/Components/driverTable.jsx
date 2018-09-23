@@ -1,6 +1,7 @@
 import { ipcRenderer } from 'electron';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import XLSX from 'xlsx';
 
 import CONSTANTS from '../constants';
 
@@ -9,33 +10,36 @@ class DriverTable extends Component {
   constructor() {
     super();
     this.state = {
-      trailerSheetJSON: {},
+      trailerSheet: {},
+      jsonArray: [],
     };
-
-    ipcRenderer.on(CONSTANTS.EV_RECEIVE_JSON, this.onReceiveJSON);
   }
 
   componentWillMount() {
+    ipcRenderer.on(CONSTANTS.EV_RECEIVE_SHEET, this.onReceiveSheet);
     ipcRenderer.send(CONSTANTS.EV_LOAD_FILE);
   }
 
   componentWillUnmount() {
-    ipcRenderer.removeListener(CONSTANTS.EV_LOAD_FILE, this.onReceiveJSON);
+    ipcRenderer.removeListener(CONSTANTS.EV_LOAD_FILE, this.onReceiveSheet);
   }
 
-  onReceiveJSON = (_, arg) => {
-    this.setState({
-      trailerSheetJSON: arg,
+  onReceiveSheet = (_, arg) => {
+    const x = XLSX.utils.sheet_to_json(arg, {
+      range: CONSTANTS.FIRST_DATA_ROW,
+      header: CONSTANTS.HEADERS,
     });
 
-    console.log("Received JSON:\n" + arg);
+    this.setState({
+      jsonArray: x,
+    });
   }
 
   render() {
-    const { trailerSheetJSON } = this.state;
+    const { jsonArray } = this.state;
 
     return (
-      <div><pre>{JSON.stringify(trailerSheetJSON, null, 2) }</pre></div>
+      <div><pre>{JSON.stringify(jsonArray, null, 2)}</pre></div>
     );
   }
 }

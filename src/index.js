@@ -95,7 +95,5 @@ ipcMain.on(CONSTANTS.EV_LOAD_FILE, (event) => {
   const trailerSheetName = workbook.SheetNames[3];
   const trailerSheet = workbook.Sheets[trailerSheetName];
 
-  const json = XLSX.utils.sheet_to_json(trailerSheet);
-
-  event.sender.send(CONSTANTS.EV_RECEIVE_JSON, json);
+  event.sender.send(CONSTANTS.EV_RECEIVE_SHEET, trailerSheet);
 });
