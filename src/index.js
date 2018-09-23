@@ -91,9 +91,14 @@ ipcMain.on(CONSTANTS.EV_SEND_EMAIL, (_, args) => {
 });
 
 ipcMain.on(CONSTANTS.EV_LOAD_FILE, (event) => {
-  const workbook = XLSX.readFile(store.get(CONSTANTS.EXCEL_PATH));
-  const trailerSheetName = workbook.SheetNames[3];
-  const trailerSheet = workbook.Sheets[trailerSheetName];
+  const path = store.get(CONSTANTS.EXCEL_PATH);
 
-  event.sender.send(CONSTANTS.EV_RECEIVE_SHEET, trailerSheet);
+  if (path) {
+    const workbook = XLSX.readFile(path);
+
+    event.sender.send(CONSTANTS.EV_RECEIVE_SHEET, {
+      trailerSheet: workbook.Sheets[CONSTANTS.SHEET_NAMES.TRAILERS],
+      emailSheet: workbook.Sheets[CONSTANTS.SHEET_NAMES.DRIVER_EMAILS],
+    });
+  }
 });
