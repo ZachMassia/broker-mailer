@@ -10,8 +10,8 @@ class DriverTable extends Component {
   constructor() {
     super();
     this.state = {
-      trailerSheet: {},
-      jsonArray: [],
+      trailerRows: [],
+      emailRows: [],
     };
   }
 
@@ -24,22 +24,26 @@ class DriverTable extends Component {
     ipcRenderer.removeListener(CONSTANTS.EV_LOAD_FILE, this.onReceiveSheet);
   }
 
-  onReceiveSheet = (_, arg) => {
-    const x = XLSX.utils.sheet_to_json(arg, {
+  onReceiveSheet = (_, { trailerSheet, emailSheet }) => {
+    const trailers = XLSX.utils.sheet_to_json(trailerSheet, {
       range: CONSTANTS.FIRST_DATA_ROW,
       header: CONSTANTS.HEADERS,
     });
 
     this.setState({
-      jsonArray: x,
+      trailerRows: trailers,
+      emailRows: XLSX.utils.sheet_to_json(emailSheet),
     });
   }
 
   render() {
-    const { jsonArray } = this.state;
+    const { trailerRows, emailRows } = this.state;
 
     return (
-      <div><pre>{JSON.stringify(jsonArray, null, 2)}</pre></div>
+      <div>
+        <div><pre>{JSON.stringify(emailRows, null, 2)}</pre></div>
+        <div><pre>{JSON.stringify(trailerRows, null, 2)}</pre></div>
+      </div>
     );
   }
 }
