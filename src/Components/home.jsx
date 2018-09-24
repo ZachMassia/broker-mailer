@@ -12,7 +12,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 
 import Settings from './settings';
-import DriverTable from './driverTable';
+import EmailPage from './emailPage';
 
 const drawerWidth = 240;
 
@@ -110,14 +110,14 @@ class Home extends Component {
       key: 'navItem-sendEmails',
       text: 'Send Emails',
       icon: <SwapHorizIcon />,
-      component: DriverTable,
+      component: EmailPage,
     },
     /*
     {
       key: 'navItem-driverInfo',
       text: 'Driver Info',
       icon: <AccountBoxIcon />,
-      component: <DriverTable />,
+      component: <EmailPage />,
     },
     */
     {

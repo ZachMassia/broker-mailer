@@ -6,7 +6,7 @@ import XLSX from 'xlsx';
 import CONSTANTS from '../constants';
 
 
-class DriverTable extends Component {
+class EmailPage extends Component {
   constructor() {
     super();
     this.state = {
@@ -64,8 +64,8 @@ class DriverTable extends Component {
   }
 }
 
-DriverTable.propTypes = {
+EmailPage.propTypes = {
   store: PropTypes.object.isRequired,   // eslint-disable-line
 };
 
-export default DriverTable;
+export default EmailPage;
