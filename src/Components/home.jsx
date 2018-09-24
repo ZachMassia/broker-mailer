@@ -10,9 +10,10 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
+import CodeIcon from '@material-ui/icons/Code';
 
-import Settings from './settings';
-import EmailPage from './emailPage';
+import { Settings, EmailPage, EditTemplate } from '.';
+
 
 const drawerWidth = 240;
 
@@ -112,14 +113,12 @@ class Home extends Component {
       icon: <SwapHorizIcon />,
       component: EmailPage,
     },
-    /*
     {
-      key: 'navItem-driverInfo',
-      text: 'Driver Info',
-      icon: <AccountBoxIcon />,
-      component: <EmailPage />,
+      key: 'navItem-editTemplate',
+      text: 'Edit Email Template',
+      icon: <CodeIcon />,
+      component: EditTemplate,
     },
-    */
     {
       key: 'navItem-settings',
       text: 'Settings',

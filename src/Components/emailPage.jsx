@@ -21,7 +21,7 @@ class EmailPage extends Component {
   }
 
   componentWillUnmount() {
-    ipcRenderer.removeListener(CONSTANTS.EV_LOAD_FILE, this.onReceiveSheet);
+    ipcRenderer.removeListener(CONSTANTS.EV_RECEIVE_SHEET, this.onReceiveSheet);
   }
 
   onReceiveSheet = (_, { trailerSheet, emailSheet }) => {
@@ -52,13 +52,11 @@ class EmailPage extends Component {
   }
 
   render() {
-    const { trailerRows, emailRows } = this.state;
+    const trailers = this.getBrokerTrailers();
 
     return (
       <div>
-        <div><pre>{JSON.stringify(this.getBrokerTrailers(), null, 2)}</pre></div>
-        <div><pre>{JSON.stringify(emailRows, null, 2)}</pre></div>
-        <div><pre>{JSON.stringify(trailerRows, null, 2)}</pre></div>
+        <pre>{JSON.stringify(trailers, null, 2)}</pre>
       </div>
     );
   }

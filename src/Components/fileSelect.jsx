@@ -54,10 +54,10 @@ class FileSelect extends Component {
         </CardContent>
         <CardActions>
           <Button
-            size="small"
             onClick={() => ipcRenderer.send(CONSTANTS.EV_OPEN_FILE_DIALOG, 'data_str')}
+            style={{ flex: 1 }}
           >
-            Set file..
+            Choose File
           </Button>
         </CardActions>
       </Card>

@@ -1,3 +1,4 @@
+export { default as EditTemplate } from './editTemplate';
 export { default as EmailPage } from './emailPage';
 export { default as EmailAuth } from './emailAuth';
 export { default as FileSelct } from './fileSelect';

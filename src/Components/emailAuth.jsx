@@ -59,6 +59,7 @@ class EmailAuth extends Component {
           <Button
             size="small"
             onClick={() => store.set(CONSTANTS.EMAIL_AUTH, this.state)}
+            style={{ flex: 1 }}
           >
             Update credentials
           </Button>
