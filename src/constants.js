@@ -34,7 +34,14 @@ const CONSTANTS = {
     DRIVER_NAME: 'DRIVER_NAME',
   },
 
+  EMAIL_HEADERS: ['NAME', 'EMAIL'],
+  EMAIL_KEYS: {
+    NAME: 'NAME',
+    EMAIL: 'EMAIL',
+  },
+
   FIRST_DATA_ROW: 3,
+  FIRST_EMAIL_ROW: 1,
 };
 
 export default CONSTANTS;

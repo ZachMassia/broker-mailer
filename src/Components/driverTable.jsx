@@ -32,8 +32,23 @@ class DriverTable extends Component {
 
     this.setState({
       trailerRows: trailers,
-      emailRows: XLSX.utils.sheet_to_json(emailSheet),
+      emailRows: XLSX.utils.sheet_to_json(emailSheet, {
+        range: CONSTANTS.FIRST_EMAIL_ROW,
+        header: CONSTANTS.EMAIL_HEADERS,
+      }),
     });
+  }
+
+  getBrokerTrailers = () => {
+    const { trailerRows, emailRows } = this.state;
+
+    return emailRows.map(driver => ({
+      name: driver[CONSTANTS.EMAIL_KEYS.NAME],
+      email: driver[CONSTANTS.EMAIL_KEYS.EMAIL],
+      trailers: trailerRows.filter((trailer) => { // eslint-disable-line
+        return driver[CONSTANTS.EMAIL_KEYS.NAME] === trailer[CONSTANTS.KEYS.DRIVER_NAME];
+      }),
+    }));
   }
 
   render() {
@@ -41,6 +56,7 @@ class DriverTable extends Component {
 
     return (
       <div>
+        <div><pre>{JSON.stringify(this.getBrokerTrailers(), null, 2)}</pre></div>
         <div><pre>{JSON.stringify(emailRows, null, 2)}</pre></div>
         <div><pre>{JSON.stringify(trailerRows, null, 2)}</pre></div>
       </div>
