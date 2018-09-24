@@ -46,7 +46,7 @@ class EditTemplate extends Component {
     super();
 
     this.state = {
-      template: '',
+      template: 'Hello {{name}},\n\nHere is the status update for your trailer(s):\n\n{{#trailers}}\n  -- {{{UNIT}}} -\n    PM due in {{DAYS_UNTIL_PM}} days\n    Safety due in {{DAYS_UNTIL_SAFETY}} days\n{{/trailers}}\n\nThanks,\nMacEwen Garage',
     };
   }
 

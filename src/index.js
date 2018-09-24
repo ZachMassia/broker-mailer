@@ -81,12 +81,14 @@ ipcMain.on(CONSTANTS.EV_OPEN_FILE_DIALOG, (event) => {
 
 ipcMain.on(CONSTANTS.EV_SEND_EMAIL, (_, args) => {
   const { recipient, body } = args;
+  const auth = store.get(CONSTANTS.EMAIL_AUTH);
 
   NodeOutlook.sendEmail({
-    auth: store.get(CONSTANTS.EMAIL_AUTH),
-    from: store.get(CONSTANTS.EMAIL_FROM),
+    auth,
+    from: auth.user,
     to: recipient,
     text: body,
+    subject: 'Trailer Maintenance',
   });
 });
 
