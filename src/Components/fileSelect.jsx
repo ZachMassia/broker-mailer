@@ -27,13 +27,6 @@ class FileSelect extends Component {
     if (path) {
       this.setState({ filePath: path });
     }
-
-    // Register to the filePath updates directly on the store.
-    // This will catch any potential updates made on the renderer process.
-    store.onDidChange(
-      CONSTANTS.EXCEL_PATH,
-      filePath => this.setState({ ...filePath }),
-    );
   }
 
   componentWillUnmount() {
@@ -64,7 +57,7 @@ class FileSelect extends Component {
             size="small"
             onClick={() => ipcRenderer.send(CONSTANTS.EV_OPEN_FILE_DIALOG, 'data_str')}
           >
-          Set file..
+            Set file..
           </Button>
         </CardActions>
       </Card>

@@ -23,9 +23,6 @@ class EmailAuth extends Component {
     if (auth) {
       this.setState({ ...auth });
     }
-
-    // Register to the filePath updates.
-    store.onDidChange(CONSTANTS.EMAIL_AUTH, _auth => this.setState({ ..._auth }));
   }
 
   handleUserChange = (e) => {
