@@ -89,6 +89,7 @@ ipcMain.on(CONSTANTS.EV_SEND_EMAIL, (_, args) => {
     to: recipient,
     text: body,
     subject: 'Trailer Maintenance',
+    cc: 'garagestaff@macewen.ca',
   });
 });
 
