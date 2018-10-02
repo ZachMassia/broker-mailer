@@ -4,9 +4,8 @@ import {
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import { enableLiveReload } from 'electron-compile';
 import Store from 'electron-store';
-import NodeOutlook from 'nodejs-nodemailer-outlook';
 import XLSX from 'xlsx';
-
+import nodemailer from 'nodemailer';
 import CONSTANTS from './constants';
 
 
@@ -20,12 +19,22 @@ const isDevMode = process.execPath.match(/[\\/]electron/);
 
 if (isDevMode) enableLiveReload({ strategy: 'react-hmr' });
 
+
+const auth = store.get(CONSTANTS.EMAIL_AUTH);
+
+const transporter = nodemailer.createTransport({
+  host: 'smtp.office365.com',
+  port: 587,
+  auth,
+  tls: { ciphers: 'SSLv3' },
+  logger: true,
+});
+
+
 const createWindow = async () => {
   // Create the browser window.
-  mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-  });
+  mainWindow = new BrowserWindow({ show: false });
+  mainWindow.maximize();
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`);
@@ -43,6 +52,8 @@ const createWindow = async () => {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+
+  mainWindow.show();
 };
 
 // This method will be called when Electron has finished
@@ -79,18 +90,30 @@ ipcMain.on(CONSTANTS.EV_OPEN_FILE_DIALOG, (event) => {
   );
 });
 
-ipcMain.on(CONSTANTS.EV_SEND_EMAIL, (_, args) => {
-  const { recipient, body } = args;
-  const auth = store.get(CONSTANTS.EMAIL_AUTH);
+ipcMain.on(CONSTANTS.EV_SEND_EMAILS, (_, emails) => {
+  // Update the auth incase credentials changed since startup.
+  transporter.auth = store.get(CONSTANTS.EMAIL_AUTH);
 
-  NodeOutlook.sendEmail({
-    auth,
-    from: auth.user,
-    to: recipient,
+  const createEmailPromise = ({ body, recipient }) => transporter.sendMail({
+    to: 'zmassia@gmail.com',
+    from: transporter.auth.user,
     text: body,
-    subject: 'Trailer Maintenance',
-    cc: 'garagestaff@macewen.ca',
+    subject: `Test email [meant for ${recipient}`,
   });
+
+  transporter.verify()
+    .then(() => {
+      Promise.all(emails.map(createEmailPromise)).then((res) => {
+        const successfulSends = res.filter(({ rejected }) => rejected.length === 0);
+
+        dialog.showMessageBox({
+          type: 'info',
+          title: 'Success sending emails!',
+          message: `Sent ${successfulSends} emails without error.`,
+        });
+      }).catch(Err => dialog.showErrorBox('Error sending emails', Err));
+    })
+    .catch(Err => dialog.showErrorBox('Error authenticating', Err));
 });
 
 ipcMain.on(CONSTANTS.EV_LOAD_FILE, (event) => {

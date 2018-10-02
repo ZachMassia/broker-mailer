@@ -69,27 +69,29 @@ class EmailPage extends Component {
     });
   }
 
-  sendEmailToMain = (email) => {
-    ipcRenderer.send(CONSTANTS.EV_SEND_EMAIL, email);
-  }
-
   sendEmails = () => {
     const { store } = this.props;
 
     const brokers = this.getBrokerTrailers();
     const template = store.get(CONSTANTS.TEMPLATE);
 
-    const emails = brokers.map(driver => ({
-      body: Mustache.render(template, driver),
-      recipient: driver.email,
-    }));
+    const emails = brokers
+      .filter(({ email }) => email) // Remove drivers without emails
+      .map(driver => ({
+        body: Mustache.render(template, driver),
+        recipient: driver.email,
+      }));
 
-    emails.forEach(this.sendEmailToMain);
+    ipcRenderer.send(CONSTANTS.EV_SEND_EMAILS, emails);
   }
 
   render() {
     const { emailRows } = this.state;
-    const driverCount = emailRows.length;
+    const driverTotalCount = emailRows.length;
+    const validDriverCount = this
+      .getBrokerTrailers()
+      .filter(({ email }) => email)
+      .length;
 
     return (
       <Grid container spacing={24}>
@@ -112,7 +114,7 @@ class EmailPage extends Component {
               <Button
                 onClick={this.sendEmails}
               >
-                {`Send ${driverCount} emails`}
+                {`Send ${validDriverCount}/${driverTotalCount} emails`}
               </Button>
             </CardActions>
           </Card>
